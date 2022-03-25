@@ -6,16 +6,17 @@ public class Ghost : MonoBehaviour
 {
     [SerializeField] private Transform ground_check_transform = null;
     [SerializeField] private LayerMask player_mask;
-    [SerializeField] float speed_h = 2f;
-    [SerializeField] float speed_v = 2f;
+    [SerializeField] float speed_h;
+    [SerializeField] float speed_v;
     public float yaw = 0f;
     public float pitch = 0.5f;
+    public int scale;
 
     bool pressed_jump;
     float horizontal_input, forward_input;
-    int scale;
     Rigidbody rigid_body;
     Animator animator;
+    public int state = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -59,29 +60,47 @@ public class Ghost : MonoBehaviour
         }
         if (pressed_jump)
         {
-            rigid_body.AddForce(Vector3.up * scale, ForceMode.VelocityChange);
+            rigid_body.AddForce(Vector3.up * 2 * scale, ForceMode.VelocityChange);
             pressed_jump = false;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 7)
+        string m_ClipName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+        if (other.gameObject.layer == 7 && (m_ClipName.Equals("Grab") || m_ClipName.Equals("Push")))
         {
             Destroy(other.gameObject);
+            if (other.name.Equals("Fish"))
+            {
+                if (m_ClipName.Equals("Grab"))
+                {
+                    state = 1;
+                }
+                else
+                {
+                    state = 2;
+                }
+            }
         }
+        if (other.gameObject.layer == 8 && m_ClipName.Equals("Push"))
+        {
+            Destroy(other.gameObject);
+            state = 1;
+        }
+        print(m_ClipName);
     }
 
     private void Action(string action_name, string key)
     {
-        bool pressed_grab = Input.GetKey(key);
-        bool grabbing = animator.GetBool(action_name);
+        bool pressed_action = Input.GetKey(key);
+        bool doing_action = animator.GetBool(action_name);
 
-        if (!grabbing && pressed_grab)
+        if (!doing_action && pressed_action)
         {
             animator.SetBool(action_name, true);
         }
-        else if (grabbing && !pressed_grab)
+        else if (doing_action && !pressed_action)
         {
             animator.SetBool(action_name, false);
         }

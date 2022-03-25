@@ -13,8 +13,13 @@ public class Fish : MonoBehaviour
     {
         if (transform.position != target[current].position)
         {
-            Vector3 pos = Vector3.MoveTowards(transform.position, target[current].position, speed * Time.deltaTime);
-            GetComponent<Rigidbody>().MovePosition(pos);
+            Vector3 curpos = transform.position;
+            Vector3 curtar = target[current].position;
+            float angle = Mathf.Atan2(curtar.x - curpos.x, curtar.z - curpos.z) * Mathf.Rad2Deg;
+            Vector3 new_vec = new Vector3(0f, angle, 0f);
+            transform.eulerAngles = new_vec;
+            Vector3 new_pos = Vector3.MoveTowards(curpos, curtar, speed * Time.deltaTime);
+            GetComponent<Rigidbody>().MovePosition(new_pos);
         }
         else current = (current + 1) % target.Length;
     }
