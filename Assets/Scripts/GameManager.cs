@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public Ghost player;
     public Text TextHUD;
     public Text TextLevel;
 
@@ -13,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject panel_hud;
     public GameObject panel_level_completed;
     public GameObject panel_game_over;
+    public Ghost player;
 
     public enum State { MENU, INIT, PLAY, LEVELCOMPLETED, LOADLEVEL, GAMEOVER }
     State _state;
@@ -42,16 +42,6 @@ public class GameManager : MonoBehaviour
             case State.INIT:
                 break;
             case State.PLAY:
-                if (player.state == 1)
-                {
-                    print("hmm...");
-                    SwitchState(State.LEVELCOMPLETED);
-                }
-                if (player.state == 2)
-                {
-                    print("dh");
-                    SwitchState(State.GAMEOVER);
-                }
                 break;
             case State.LEVELCOMPLETED:
                 break;
@@ -76,13 +66,11 @@ public class GameManager : MonoBehaviour
                 break;
             case State.LEVELCOMPLETED:
                 panel_level_completed.SetActive(true);
-                print("good job");
                 break;
             case State.LOADLEVEL:
                 break;
             case State.GAMEOVER:
                 panel_game_over.SetActive(true);
-                print("ya loser");
                 break;
         }
     }

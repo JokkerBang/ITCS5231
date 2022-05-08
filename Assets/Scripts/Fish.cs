@@ -23,4 +23,14 @@ public class Fish : MonoBehaviour
         }
         else current = (current + 1) % target.Length;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 8)
+        {
+            print("fishy crash");
+            GameManager game = gameObject.GetComponentInParent<GameManager>();
+            game.SwitchState(GameManager.State.GAMEOVER);
+        }
+    }
 }

@@ -16,12 +16,10 @@ public class Ghost : MonoBehaviour
     float horizontal_input, forward_input;
     Rigidbody rigid_body;
     Animator animator;
-    public int state = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        scale = 5;
         rigid_body = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
@@ -70,24 +68,28 @@ public class Ghost : MonoBehaviour
         string m_ClipName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
         if (other.gameObject.layer == 7 && (m_ClipName.Equals("Grab") || m_ClipName.Equals("Push")))
         {
-            Destroy(other.gameObject);
-            if (other.name.Equals("Fish"))
+            if (other.name.Equals("fish"))
             {
+                GameManager game = gameObject.GetComponentInParent<GameManager>();
                 if (m_ClipName.Equals("Grab"))
                 {
-                    state = 1;
+                    game.SwitchState(GameManager.State.LEVELCOMPLETED);
                 }
                 else
                 {
-                    state = 2;
+                    game.SwitchState(GameManager.State.GAMEOVER);
                 }
             }
+            Destroy(other.gameObject);
         }
         if (other.gameObject.layer == 8 && m_ClipName.Equals("Push"))
         {
+            GameManager game = gameObject.GetComponentInParent<GameManager>();
+            game.SwitchState(GameManager.State.GAMEOVER);
             Destroy(other.gameObject);
-            state = 1;
         }
+        print(other.name);
+        print(other.gameObject.layer);
         print(m_ClipName);
     }
 

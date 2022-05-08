@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{17E0D259-E9B9-C90E-1270-B4A147A73C2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -56,10 +57,13 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\FishEnemy.cs" />
     <Compile Include="Assets\Scripts\camera.cs" />
     <Compile Include="Assets\Scripts\Fish.cs" />
+    <Compile Include="Assets\Scripts\EnemyAwareness.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Ghost.cs" />
+    <Compile Include="Assets\Scripts\Countdown.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
