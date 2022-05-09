@@ -14946,6 +14946,8 @@ MonoBehaviour:
   panel_hud: {fileID: 1973975667}
   panel_level_completed: {fileID: 619585722}
   panel_game_over: {fileID: 1726780800}
+  level1: {fileID: 1426310187}
+  level2: {fileID: 2135820933}
   player: {fileID: 1452188278}
 --- !u!4 &840654831
 Transform:
@@ -32962,15 +32964,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3841584151147877335, guid: 048f09c9698e7ea4db035356a0ef8e31, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.43216038
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3841584151147877335, guid: 048f09c9698e7ea4db035356a0ef8e31, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.6322942
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3841584151147877335, guid: 048f09c9698e7ea4db035356a0ef8e31, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -74.45579
+      value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 3841584151147877335, guid: 048f09c9698e7ea4db035356a0ef8e31, type: 3}
       propertyPath: m_LocalRotation.w

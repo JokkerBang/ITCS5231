@@ -12,7 +12,12 @@ public class GameManager : MonoBehaviour
     public GameObject panel_hud;
     public GameObject panel_level_completed;
     public GameObject panel_game_over;
+    public GameObject level1;
+    public GameObject level2;
     public Ghost player;
+
+    float level_countdown;
+    int level_current;
 
     public enum State { MENU, INIT, PLAY, LEVELCOMPLETED, LOADLEVEL, GAMEOVER }
     State _state;
@@ -30,6 +35,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SwitchState(State.MENU);
+        level_countdown = 10f;
+        level_current = 1;
+        level2.SetActive(false);
     }
 
     // Update is called once per frame
@@ -44,6 +52,11 @@ public class GameManager : MonoBehaviour
             case State.PLAY:
                 break;
             case State.LEVELCOMPLETED:
+                level_countdown -= Time.deltaTime;
+                if (level_countdown <= 0)
+                {
+                    SwitchState(State.PLAY);
+                }
                 break;
             case State.LOADLEVEL:
                 break;
@@ -63,9 +76,15 @@ public class GameManager : MonoBehaviour
                 panel_hud.SetActive(true);
                 break;
             case State.PLAY:
+                panel_level_completed.SetActive(false);
+                panel_game_over.SetActive(false);
+                if (level_current == 1) level1.SetActive(true);
+                else if (level_current == 2) level2.SetActive(true);
+                player.transform.position = new Vector3(0f, 3f, -75f);
                 break;
             case State.LEVELCOMPLETED:
                 panel_level_completed.SetActive(true);
+                level1.SetActive(false);
                 break;
             case State.LOADLEVEL:
                 break;
