@@ -77,16 +77,22 @@ public class Ghost : MonoBehaviour
                 }
                 else
                 {
+                    game.text_game_over.text = "You hurt the small fish. :P";
                     game.SwitchState(GameManager.State.GAMEOVER);
                 }
             }
             Destroy(other.gameObject);
         }
-        if (other.gameObject.layer == 8 && m_ClipName.Equals("Push"))
+        else if (other.gameObject.layer == 8 && m_ClipName.Equals("Push"))
         {
             GameManager game = gameObject.GetComponentInParent<GameManager>();
+            game.text_game_over.text = "You chose to attack the big fish instead of helping the little one.";
             game.SwitchState(GameManager.State.GAMEOVER);
             Destroy(other.gameObject);
+        }
+        else if (other.gameObject.layer == 9 && m_ClipName.Equals("Push"))
+        {
+            other.GetComponent<Door>().Open();
         }
         print(other.name);
         print(other.gameObject.layer);

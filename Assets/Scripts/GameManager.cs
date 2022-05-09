@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public GameObject level1;
     public GameObject level2;
     public Ghost player;
+    public Text text_game_over;
+    public Text text_level_complete;
 
     float level_countdown;
     int level_current;
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
         SwitchState(State.MENU);
         level_countdown = 10f;
         level_current = 1;
+        text_game_over.text = "";
         level2.SetActive(false);
     }
 
@@ -53,6 +56,7 @@ public class GameManager : MonoBehaviour
                 break;
             case State.LEVELCOMPLETED:
                 level_countdown -= Time.deltaTime;
+                text_level_complete.text = Mathf.Round(level_countdown).ToString();
                 if (level_countdown <= 0)
                 {
                     SwitchState(State.PLAY);
@@ -62,6 +66,10 @@ public class GameManager : MonoBehaviour
                 break;
             case State.GAMEOVER:
                 break;
+        }
+        if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.N))
+        {
+            SwitchState(State.LEVELCOMPLETED);
         }
     }
 
@@ -74,6 +82,7 @@ public class GameManager : MonoBehaviour
                 break;
             case State.INIT:
                 panel_hud.SetActive(true);
+                BeginState(State.PLAY);
                 break;
             case State.PLAY:
                 panel_level_completed.SetActive(false);
@@ -85,6 +94,7 @@ public class GameManager : MonoBehaviour
             case State.LEVELCOMPLETED:
                 panel_level_completed.SetActive(true);
                 level1.SetActive(false);
+                level_current++;
                 break;
             case State.LOADLEVEL:
                 break;
@@ -121,6 +131,7 @@ public class GameManager : MonoBehaviour
     {
         EndState();
         BeginState(new_state);
+        _state = new_state;
         print(new_state);
     }
 
