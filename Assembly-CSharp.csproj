@@ -60,10 +60,11 @@
     <Compile Include="Assets\Scripts\camera.cs" />
     <Compile Include="Assets\Scripts\Countdown.cs" />
     <Compile Include="Assets\Scripts\Fish.cs" />
+    <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Scripts\EnemyAwareness.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Ghost.cs" />
-    <Compile Include="Assets\Scripts\Door.cs" />
+    <Compile Include="Assets\Scripts\Orb.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

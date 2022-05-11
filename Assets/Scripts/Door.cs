@@ -8,20 +8,21 @@ public class Door : MonoBehaviour
     public GameObject pivot;
     public float final_angle;
     public float direction;
+    public GameObject opposite_door;
 
     public enum State { CLOSED, OPENING, OPEN }
-    State _state;
+    public State state;
 
     // Start is called before the first frame update
     void Start()
     {
-        _state = State.CLOSED;
+        state = State.CLOSED;
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(_state)
+        switch(state)
         {
             case State.OPEN:
                 break;
@@ -32,7 +33,7 @@ public class Door : MonoBehaviour
                     print($"diff: {final_angle - y_angle} dir: {direction} movement: {Vector3.up * direction}");
                     transform.RotateAround(pivot.transform.position, Vector3.up * direction, 20 * Time.deltaTime);
                 }
-                else _state = State.OPEN;
+                else state = State.OPEN;
 
                 break;
             case State.CLOSED:
@@ -42,6 +43,8 @@ public class Door : MonoBehaviour
 
     public void Open()
     {
-        _state = State.OPENING;
+        Door other_door = opposite_door.GetComponent<Door>();
+        if (state == State.CLOSED) state = State.OPENING;
+        if (other_door.state == State.CLOSED) other_door.Open();
     }
 }
