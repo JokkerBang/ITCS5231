@@ -11,6 +11,7 @@ public class Ghost : MonoBehaviour
     public float yaw = 0f;
     public float pitch = 0.5f;
     public int scale;
+    public GameObject game_manager;
 
     bool pressed_jump;
     float horizontal_input, forward_input;
@@ -83,12 +84,20 @@ public class Ghost : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
-        else if (other.gameObject.layer == 8 && m_ClipName.Equals("Push"))
+        else if (other.gameObject.layer == 8)
         {
-            GameManager game = gameObject.GetComponentInParent<GameManager>();
-            game.text_game_over.text = "You chose to attack the big fish instead of helping the little one.";
-            game.SwitchState(GameManager.State.GAMEOVER);
-            Destroy(other.gameObject);
+            if (other.name == "orb")
+            {
+                GameManager game = game_manager.GetComponent<GameManager>();
+                game.DisplayTutorial("Did you come to fight me?", 3600, true);
+            }
+            else if (m_ClipName.Equals("Push"))
+            {
+                GameManager game = gameObject.GetComponentInParent<GameManager>();
+                game.text_game_over.text = "You chose to attack the big fish instead of helping the little one.";
+                game.SwitchState(GameManager.State.GAMEOVER);
+                Destroy(other.gameObject);
+            }
         }
         else if (other.gameObject.layer == 9 && m_ClipName.Equals("Push"))
         {

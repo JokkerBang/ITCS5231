@@ -6,6 +6,8 @@ public class Orb : MonoBehaviour
 {
     public Transform[] target;
     public float speed;
+    public GameObject door;
+    public Transform passage;
 
     private int current;
 
@@ -15,7 +17,14 @@ public class Orb : MonoBehaviour
     }
     void Update()
     {
-        if (transform.position != target[current].position)
+        Door door_script = door.GetComponent<Door>();
+        if (door_script.state == Door.State.OPEN)
+        {
+            Vector3 curtar = passage.position;
+            Vector3 new_pos = get_new_position(curtar);
+            GetComponent<Rigidbody>().MovePosition(new_pos);
+        }
+        else if (transform.position != target[current].position)
         {
             Vector3 curtar = target[current].position;
             Vector3 new_pos = get_new_position(curtar);

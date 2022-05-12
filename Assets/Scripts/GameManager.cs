@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public Text TextHUD;
-    public Text TextLevel;
+    public Text text_level;
 
     public GameObject panel_menu;
     public GameObject panel_hud;
@@ -17,11 +17,16 @@ public class GameManager : MonoBehaviour
     public Ghost player;
     public Text text_game_over;
     public Text text_level_complete;
+    public GameObject panel_tutorial;
+    public GameObject panel_buttons;
+    public GameObject panel_win;
 
     float level_countdown;
+    float tutorial_countdown;
     int level_current;
+    bool tutorial_active;
 
-    public enum State { MENU, INIT, PLAY, LEVELCOMPLETED, LOADLEVEL, GAMEOVER }
+    public enum State { MENU, INIT, PLAY, LEVELCOMPLETED, LOADLEVEL, GAMEOVER, WIN }
     State _state;
 
     private int _health;
@@ -40,7 +45,9 @@ public class GameManager : MonoBehaviour
         level_countdown = 10f;
         level_current = 1;
         text_game_over.text = "";
+        tutorial_active = false;
         level2.SetActive(false);
+        tutorial_countdown = 0;
     }
 
     // Update is called once per frame
@@ -53,6 +60,14 @@ public class GameManager : MonoBehaviour
             case State.INIT:
                 break;
             case State.PLAY:
+                if (tutorial_active)
+                {
+                    tutorial_countdown -= Time.deltaTime;
+                    if (tutorial_countdown <= 0)
+                    {
+                        HideTutorial();
+                    }
+                }
                 break;
             case State.LEVELCOMPLETED:
                 level_countdown -= Time.deltaTime;
@@ -65,6 +80,8 @@ public class GameManager : MonoBehaviour
             case State.LOADLEVEL:
                 break;
             case State.GAMEOVER:
+                break;
+            case State.WIN:
                 break;
         }
         if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.N))
@@ -81,50 +98,40 @@ public class GameManager : MonoBehaviour
                 panel_menu.SetActive(true);
                 break;
             case State.INIT:
-                panel_hud.SetActive(true);
-                BeginState(State.PLAY);
+                level_current = 1;
+                SwitchState(State.PLAY);
                 break;
             case State.PLAY:
-                panel_level_completed.SetActive(false);
-                panel_game_over.SetActive(false);
+                panel_hud.SetActive(true);
+                string level_text = $"Level {level_current}";
+                text_level.text = level_text;
                 if (level_current == 1) level1.SetActive(true);
                 else if (level_current == 2) level2.SetActive(true);
                 player.transform.position = new Vector3(0f, 3f, -75f);
                 break;
             case State.LEVELCOMPLETED:
                 panel_level_completed.SetActive(true);
+                DisplayTutorial("I'm falling!!!");
                 level1.SetActive(false);
                 level_current++;
                 break;
             case State.LOADLEVEL:
                 break;
             case State.GAMEOVER:
+                HideTutorial();
                 panel_game_over.SetActive(true);
+                break;
+            case State.WIN:
+                level2.SetActive(false);
+                panel_win.SetActive(true);
                 break;
         }
     }
 
     void EndState()
     {
-        switch (_state)
-        {
-            case State.MENU:
-                panel_menu.SetActive(false);
-                break;
-            case State.INIT:
-                break;
-            case State.PLAY:
-                break;
-            case State.LEVELCOMPLETED:
-                panel_level_completed.SetActive(false);
-                break;
-            case State.LOADLEVEL:
-                break;
-            case State.GAMEOVER:
-                panel_hud.SetActive(false);
-                panel_game_over.SetActive(false);
-                break;
-        }
+        HidePanels();
+        HideTutorial();
     }
 
     public void SwitchState(State new_state)
@@ -138,5 +145,42 @@ public class GameManager : MonoBehaviour
     public void PlayClicked()
     {
         SwitchState(State.INIT);
+    }
+
+    public void GameOver()
+    {
+        SwitchState(State.GAMEOVER);
+    }
+
+    public void Win()
+    {
+        SwitchState(State.WIN);
+    }
+
+    public void DisplayTutorial(string text_to_show, float countdown = 10, bool activate_buttons = false)
+    {
+        panel_tutorial.SetActive(true);
+        panel_tutorial.GetComponentInChildren<Text>().text = text_to_show;
+        tutorial_countdown = countdown;
+        if (activate_buttons)
+        {
+            panel_buttons.SetActive(true);
+        } else panel_buttons.SetActive(false);
+        tutorial_active = true;
+    }
+
+    public void HideTutorial()
+    {
+        panel_tutorial.SetActive(false);
+        tutorial_active = false;
+    }
+
+    void HidePanels()
+    {
+        panel_game_over.SetActive(false);
+        panel_hud.SetActive(false);
+        panel_level_completed.SetActive(false);
+        panel_menu.SetActive(false);
+        panel_tutorial.SetActive(false);
     }
 }

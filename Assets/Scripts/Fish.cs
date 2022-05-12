@@ -5,9 +5,16 @@ public class Fish : MonoBehaviour
 {
     public Transform[] target;
     public float speed;
+    public GameObject enemy;
+    public GameObject game_manager;
+
     private int current;
+    private bool crying;
     // Use this for initialization    
-    void Start() { }
+    void Start() 
+    {
+        crying = false;
+    }
     // Update is called once per frame    
     void Update()
     {
@@ -22,6 +29,14 @@ public class Fish : MonoBehaviour
             GetComponent<Rigidbody>().MovePosition(new_pos);
         }
         else current = (current + 1) % target.Length;
+
+        if (!crying && enemy.GetComponent<FishEnemy>().eat)
+        {
+            crying = true;
+            GetComponent<AudioSource>().Play();
+            game_manager.GetComponent<GameManager>().DisplayTutorial("The small fish needs your help! Grab it using 'g'.\nOr use 'e' to attack.");
+
+        }
     }
 
     private void OnTriggerEnter(Collider other)
