@@ -10,13 +10,13 @@ public class Door : MonoBehaviour
     public float direction;
     public GameObject opposite_door;
 
-    public enum State { CLOSED, OPENING, OPEN }
-    public State state;
+    public enum DoorState { CLOSED, OPENING, OPEN }
+    public DoorState state;
 
     // Start is called before the first frame update
     void Start()
     {
-        state = State.CLOSED;
+        state = DoorState.CLOSED;
     }
 
     // Update is called once per frame
@@ -24,19 +24,21 @@ public class Door : MonoBehaviour
     {
         switch(state)
         {
-            case State.OPEN:
+            case DoorState.OPEN:
                 break;
-            case State.OPENING:
+            case DoorState.OPENING:
                 float y_angle = gameObject.transform.eulerAngles.y;
                 if (Mathf.Abs(final_angle - y_angle) > 5)
                 {
-                    print($"diff: {final_angle - y_angle} dir: {direction} movement: {Vector3.up * direction}");
                     transform.RotateAround(pivot.transform.position, Vector3.up * direction, 20 * Time.deltaTime);
                 }
-                else state = State.OPEN;
-
+                else
+                {
+                    state = DoorState.OPEN;
+                    gameObject.GetComponent<AudioSource>().Stop();
+                }
                 break;
-            case State.CLOSED:
+            case DoorState.CLOSED:
                 break;
         }
     }
@@ -44,7 +46,11 @@ public class Door : MonoBehaviour
     public void Open()
     {
         Door other_door = opposite_door.GetComponent<Door>();
-        if (state == State.CLOSED) state = State.OPENING;
-        if (other_door.state == State.CLOSED) other_door.Open();
+        if (state == DoorState.CLOSED)
+        {
+            state = DoorState.OPENING;
+            gameObject.GetComponent<AudioSource>().Play();
+        }
+        if (other_door.state == DoorState.CLOSED) other_door.Open();
     }
 }

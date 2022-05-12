@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject panel_game_over;
     public GameObject level1;
     public GameObject level2;
-    public Ghost player;
+    public GameObject player;
     public Text text_game_over;
     public Text text_level_complete;
     public GameObject panel_tutorial;
@@ -42,6 +42,18 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SwitchState(State.MENU);
+        level_countdown = 10f;
+        level_current = 1;
+        text_game_over.text = "";
+        tutorial_active = false;
+        level2.SetActive(false);
+        tutorial_countdown = 0;
+    }
+
+    private void Reset()
+    {
+        HidePanels();
+        HideTutorial();
         level_countdown = 10f;
         level_current = 1;
         text_game_over.text = "";
@@ -98,16 +110,16 @@ public class GameManager : MonoBehaviour
                 panel_menu.SetActive(true);
                 break;
             case State.INIT:
-                level_current = 1;
+                Reset();
                 SwitchState(State.PLAY);
                 break;
             case State.PLAY:
+                if (level_current == 1) level1.SetActive(true);
+                else if (level_current == 2) level2.SetActive(true);
                 panel_hud.SetActive(true);
                 string level_text = $"Level {level_current}";
                 text_level.text = level_text;
-                if (level_current == 1) level1.SetActive(true);
-                else if (level_current == 2) level2.SetActive(true);
-                player.transform.position = new Vector3(0f, 3f, -75f);
+                ResetPlayer();
                 break;
             case State.LEVELCOMPLETED:
                 panel_level_completed.SetActive(true);
@@ -118,10 +130,12 @@ public class GameManager : MonoBehaviour
             case State.LOADLEVEL:
                 break;
             case State.GAMEOVER:
+                ResetPlayer();
                 HideTutorial();
                 panel_game_over.SetActive(true);
                 break;
             case State.WIN:
+                ResetPlayer();
                 level2.SetActive(false);
                 panel_win.SetActive(true);
                 break;
@@ -132,6 +146,10 @@ public class GameManager : MonoBehaviour
     {
         HidePanels();
         HideTutorial();
+        if (_state == State.PLAY && level_current == 1)
+        {
+            GameObject.Find("fish").GetComponent<Fish>().Quiet();
+        }
     }
 
     public void SwitchState(State new_state)
@@ -155,6 +173,12 @@ public class GameManager : MonoBehaviour
     public void Win()
     {
         SwitchState(State.WIN);
+    }
+
+    private void ResetPlayer()
+    {
+        player.transform.position = new Vector3(0f, 3f, -75f);
+
     }
 
     public void DisplayTutorial(string text_to_show, float countdown = 10, bool activate_buttons = false)

@@ -18,7 +18,7 @@ public class Orb : MonoBehaviour
     void Update()
     {
         Door door_script = door.GetComponent<Door>();
-        if (door_script.state == Door.State.OPEN)
+        if (door_script.state == Door.DoorState.OPEN)
         {
             Vector3 curtar = passage.position;
             Vector3 new_pos = get_new_position(curtar);

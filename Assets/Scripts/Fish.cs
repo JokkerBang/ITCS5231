@@ -45,7 +45,15 @@ public class Fish : MonoBehaviour
         {
             print("fishy crash");
             GameManager game = gameObject.GetComponentInParent<GameManager>();
+            Quiet();
             game.SwitchState(GameManager.State.GAMEOVER);
         }
+    }
+
+    public void Quiet()
+    {
+        GetComponent<AudioSource>().Stop();
+        crying = false;
+        enemy.GetComponent<FishEnemy>().eat = false;
     }
 }
